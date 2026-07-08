@@ -17,7 +17,7 @@ export function LanguageSettingsCard() {
       <CardHeader>
         <CardTitle>Language</CardTitle>
         <CardDescription>
-          Choose your preferred language for FindBack.
+          Choose your preferred language for LoFi.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

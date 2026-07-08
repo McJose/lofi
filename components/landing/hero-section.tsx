@@ -39,7 +39,7 @@ export function HeroSection() {
             </h1>
 
             <p className="text-lg text-muted-foreground max-w-xl">
-              FindBack connects people who have lost items with those who have found them.
+              LoFi connects people who have lost items with those who have found them.
               Report a lost item, search for found items, and help reunite possessions with their owners.
             </p>
 

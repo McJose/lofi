@@ -51,7 +51,7 @@ const features = [
   {
     icon: Smartphone,
     title: 'Mobile Friendly',
-    description: 'Access FindBack on any device with our responsive design and mobile app.',
+    description: 'Access LoFi on any device with our responsive design and mobile app.',
   },
 ];
 

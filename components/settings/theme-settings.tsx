@@ -19,7 +19,7 @@ export function ThemeSettingsCard() {
       <CardHeader>
         <CardTitle>Appearance</CardTitle>
         <CardDescription>
-          Customize how FindBack looks to you.
+          Customize how LoFi looks to you.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">

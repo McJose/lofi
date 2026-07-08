@@ -24,7 +24,7 @@ export default function DashboardPage() {
           Welcome back, {profile?.full_name || 'User'}!
         </h1>
         <p className="text-muted-foreground">
-          Here&apos;s what&apos;s happening with your FindBack account.
+          Here&apos;s what&apos;s happening with your LoFi account.
         </p>
       </div>
 

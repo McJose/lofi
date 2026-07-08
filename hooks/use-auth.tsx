@@ -38,7 +38,7 @@ export const useAuthStore = create<AuthStore>()(
       reset: () => set(initialState),
     }),
     {
-      name: 'findback-auth',
+      name: 'lofi-auth',
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         user: state.user,

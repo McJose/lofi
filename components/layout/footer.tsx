@@ -22,7 +22,7 @@ export function Footer() {
                 </svg>
               </div>
               <span className="font-heading text-xl font-bold text-foreground">
-                FindBack
+                LoFi
               </span>
             </Link>
             <p className="text-sm text-muted-foreground max-w-xs">
@@ -102,7 +102,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} FindBack. All rights reserved.
+              © {new Date().getFullYear()} LoFi. All rights reserved.
             </p>
             <p className="text-sm text-muted-foreground">
               Founded by{' '}

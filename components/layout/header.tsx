@@ -46,7 +46,7 @@ export function Header() {
               <path d="m21 21-4.3-4.3" />
             </svg>
           </div>
-          <span className="font-heading text-xl font-bold text-foreground">FindBack</span>
+          <span className="font-heading text-xl font-bold text-foreground">LoFi</span>
         </Link>
 
         {/* Desktop Navigation */}

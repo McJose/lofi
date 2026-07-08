@@ -1,7 +1,7 @@
 export const APP_CONFIG = {
-  name: 'FindBack',
+  name: 'LoFi',
   tagline: 'Helping Lost Things Find Their Way Home',
-  description: 'FindBack is a platform that helps people recover their lost items by connecting finders with owners through a secure and easy-to-use system.',
+  description: 'LoFi is a platform that helps people recover their lost items by connecting finders with owners through a secure and easy-to-use system.',
   url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   version: '1.0.0',
   founder: {
@@ -9,12 +9,12 @@ export const APP_CONFIG = {
     portfolio: 'https://macjose.netlify.app',
   },
   contact: {
-    email: 'support@findback.app',
+    email: 'support@lofi.app',
   },
   social: {
-    twitter: 'https://twitter.com/findback',
-    facebook: 'https://facebook.com/findback',
-    instagram: 'https://instagram.com/findback',
+    twitter: 'https://twitter.com/lofi',
+    facebook: 'https://facebook.com/lofi',
+    instagram: 'https://instagram.com/lofi',
   },
 } as const;
 

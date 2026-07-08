@@ -10,7 +10,7 @@ const testimonials = [
     location: 'New York, USA',
     avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=100',
     rating: 5,
-    text: 'I lost my wedding ring at the park and thought it was gone forever. Within 2 days, someone found it through FindBack. I\'m so grateful!',
+    text: 'I lost my wedding ring at the park and thought it was gone forever. Within 2 days, someone found it through LoFi. I\'m so grateful!',
   },
   {
     name: 'Michael Chen',
@@ -24,7 +24,7 @@ const testimonials = [
     location: 'London, UK',
     avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?w=100',
     rating: 5,
-    text: 'Lost my passport while traveling. FindBack helped me connect with someone who found it. Best service ever!',
+    text: 'Lost my passport while traveling. LoFi helped me connect with someone who found it. Best service ever!',
   },
   {
     name: 'David Kim',
@@ -48,7 +48,7 @@ export function TestimonialsSection() {
         >
           <h2 className="text-3xl md:text-4xl font-bold">Success Stories</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Real stories from real people who found their lost items through FindBack.
+            Real stories from real people who found their lost items through LoFi.
           </p>
         </motion.div>
 
