@@ -16,6 +16,7 @@ const headingFont = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(APP_CONFIG.url),
   title: {
     default: `${APP_CONFIG.name} - ${APP_CONFIG.tagline}`,
     template: `%s | ${APP_CONFIG.name}`,
