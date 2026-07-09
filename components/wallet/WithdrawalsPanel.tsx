@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { WALLET_MAX_WITHDRAWAL, WALLET_MIN_WITHDRAWAL } from '@/lib/wallet';
+import { WALLET_MAX_WITHDRAWAL, WALLET_MIN_WITHDRAWAL } from '@/lib/wallet-constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export function WithdrawalsPanel({
