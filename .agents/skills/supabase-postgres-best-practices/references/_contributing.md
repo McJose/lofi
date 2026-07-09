@@ -95,7 +95,7 @@ Most references should focus on pure SQL patterns. This keeps examples portable.
 
 - Connection pooling configuration
 - Transaction management in application context
-- ORM anti-patterns (N+1 in Prisma/TypeORM)
+- ORM anti-patterns (N+1 in/TypeORM)
 - Prepared statement usage
 
 **Format for Mixed Examples:**
