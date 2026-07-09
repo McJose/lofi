@@ -5,8 +5,8 @@ import {
   Card,
   CardContent,
   CardHeader,
-  CardTitle,
   CardDescription,
+  CardTitle,
 } from '@/components/ui/card';
 
 function formatCurrency(value: number | string) {
@@ -22,7 +22,14 @@ export default function RevenuePage() {
 
   useEffect(() => {
     fetch('/api/admin/revenue')
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((body) => {
+            throw new Error(body?.error || 'Failed to load revenue.');
+          });
+        }
+        return res.json();
+      })
       .then(setSummary)
       .catch((err) => setError(err.message));
   }, []);
@@ -123,37 +130,4 @@ export default function RevenuePage() {
       </div>
     </main>
   );
-}import { cookies } from 'next/headers';
-
-export async function getCurrentUserId(): Promise<string> {
-  const cookieValue =
-    cookies().get('userId')?.value || cookies().get('user_id')?.value;
-
-  if (cookieValue) {
-    return cookieValue;
-  }
-
-  throw new Error('Authentication required');
-}import { cookies } from 'next/headers';
-
-export async function getCurrentUserId(): Promise<string> {
-  const cookieValue =
-    cookies().get('userId')?.value || cookies().get('user_id')?.value;
-
-  if (cookieValue) {
-    return cookieValue;
-  }
-
-  throw new Error('Authentication required');
-}import { cookies } from 'next/headers';
-
-export async function getCurrentUserId(): Promise<string> {
-  const cookieValue =
-    cookies().get('userId')?.value || cookies().get('user_id')?.value;
-
-  if (cookieValue) {
-    return cookieValue;
-  }
-
-  throw new Error('Authentication required');
 }
