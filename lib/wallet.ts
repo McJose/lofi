@@ -1,5 +1,10 @@
 import fs from 'fs/promises';
 import path from 'path';
+import {
+  PLATFORM_REVENUE_USER_ID,
+  WALLET_MAX_WITHDRAWAL,
+  WALLET_MIN_WITHDRAWAL,
+} from '@/lib/wallet-constants';
 
 const STORE_PATH = path.join(process.cwd(), 'data', 'wallet-store.json');
 
@@ -52,11 +57,6 @@ const INITIAL_STORE: WalletStore = {
   transactions: [],
   withdrawals: [],
 };
-
-const WALLET_MIN_WITHDRAWAL = 100;
-const WALLET_MAX_WITHDRAWAL = 50000;
-const PLATFORM_REVENUE_USER_ID =
-  process.env.PLATFORM_REVENUE_USER_ID ?? 'platform-revenue';
 
 async function ensureStore(): Promise<WalletStore> {
   try {
@@ -166,8 +166,8 @@ export async function getPlatformRevenueSummary() {
     }
   );
 
-  const countStatus = (type: 'PENDING' | 'COMPLETED' | 'FAILED') =>
-    store.withdrawals.filter((withdrawal) => withdrawal.status === type).length;
+  const countStatus = (status: 'PENDING' | 'COMPLETED' | 'FAILED') =>
+    store.withdrawals.filter((withdrawal) => withdrawal.status === status).length;
 
   const filterDate = (start: Date) =>
     store.transactions.filter(
@@ -206,7 +206,6 @@ export async function createWalletWithdrawalRequest(
     throw new Error(`Maximum withdrawal amount is ${WALLET_MAX_WITHDRAWAL}`);
   }
 
-  const store = await ensureStore();
   const wallet = await getUserWallet(userId);
 
   if (wallet.availableBalance < amount) {
@@ -215,6 +214,8 @@ export async function createWalletWithdrawalRequest(
 
   wallet.availableBalance -= amount;
   wallet.pendingBalance += amount;
+
+  const store = await ensureStore();
 
   const withdrawal: WalletWithdrawal = {
     id: generateId('withdrawal'),
@@ -260,8 +261,72 @@ export async function getTransactionHistory(userId: string, query = '') {
     .slice(0, 50);
 }
 
-export {
-  WALLET_MIN_WITHDRAWAL,
-  WALLET_MAX_WITHDRAWAL,
-  PLATFORM_REVENUE_USER_ID,
-};
+export async function applyRecoveryPayment({
+  ownerId,
+  finderId,
+  amount,
+  recoveryId,
+}: {
+  ownerId: string;
+  finderId: string;
+  amount: number;
+  recoveryId?: string;
+}) {
+  const finderWallet = await getUserWallet(finderId);
+  const platformWallet = await getOrCreatePlatformWallet();
+  const platformCommission = Number((amount * 0.2).toFixed(2));
+  const finderShare = Number((amount * 0.8).toFixed(2));
+  const referenceBase = recoveryId ?? `RECOVERY-${Date.now()}`;
+
+  finderWallet.currentBalance += finderShare;
+  finderWallet.availableBalance += finderShare;
+  finderWallet.lifetimeEarnings += finderShare;
+  finderWallet.totalRecoveries += 1;
+
+  platformWallet.currentBalance += platformCommission;
+  platformWallet.availableBalance += platformCommission;
+  platformWallet.totalPlatformFees += platformCommission;
+
+  const store = await ensureStore();
+
+  store.transactions.unshift(
+    {
+      id: generateId('txn'),
+      walletId: finderWallet.id,
+      userId: finderId,
+      recoveryId,
+      type: 'RECOVERY_PAYMENT',
+      status: 'COMPLETED',
+      amount: finderShare,
+      commission: 0,
+      netEarnings: finderShare,
+      reference: `${referenceBase}-FINDER`,
+      createdAt: new Date().toISOString(),
+    },
+    {
+      id: generateId('txn'),
+      walletId: platformWallet.id,
+      userId: platformWallet.userId,
+      recoveryId,
+      type: 'PLATFORM_COMMISSION',
+      status: 'COMPLETED',
+      amount: platformCommission,
+      commission: 0,
+      netEarnings: platformCommission,
+      reference: `${referenceBase}-PLATFORM`,
+      createdAt: new Date().toISOString(),
+    }
+  );
+
+  await saveStore(store);
+
+  return {
+    finderShare,
+    platformCommission,
+    recoveryId,
+    ownerId,
+    finderId,
+  };
+}
+
+export { WALLET_MIN_WITHDRAWAL, WALLET_MAX_WITHDRAWAL, PLATFORM_REVENUE_USER_ID };
