@@ -8,17 +8,5 @@ export async function getCurrentUserId(): Promise<string> {
     return cookieValue;
   }
 
-  try {
-    const { getServerSession } = await import('next-auth/next');
-    const { authOptions } = await import('@/lib/authOptions');
-    const session = await getServerSession(authOptions);
-
-    if (session?.user?.id) {
-      return session.user.id as string;
-    }
-  } catch {
-    // ignore missing next-auth integration
-  }
-
   throw new Error('Authentication required');
 }

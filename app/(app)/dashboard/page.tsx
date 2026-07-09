@@ -1,61 +1,86 @@
 'use client';
 
-import { useAuth } from '@/hooks/use-auth';
-import { StatsSection } from '@/components/landing/stats-section';
+import { useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { WalletOverview } from '@/components/wallet/WalletOverview';
+import { TransactionsTable } from '@/components/wallet/TransactionsTable';
+import { WithdrawalsPanel } from '@/components/wallet/WithdrawalsPanel';
+
+type DashboardResponse = {
+  wallet: any;
+  transactions: Array<any>;
+  withdrawals: Array<any>;
+};
 
 export default function DashboardPage() {
-  const { user, profile, isAuthenticated, isLoading } = useAuth();
+  const [data, setData] = useState<DashboardResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  if (isLoading) {
+  useEffect(() => {
+    fetch('/api/wallet')
+      .then((res) => {
+        if (!res.ok) {
+          return res.json().then((body) => {
+            throw new Error(body?.error || 'Failed to load wallet.');
+          });
+        }
+        return res.json();
+      })
+      .then(setData)
+      .catch((err) => setError(err.message));
+  }, []);
+
+  if (error) {
     return (
-      <div className="container py-12">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-muted rounded w-1/4" />
-          <div className="h-32 bg-muted rounded" />
-        </div>
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
+        <p className="max-w-xl rounded-3xl border border-red-700 bg-red-950/60 p-6 text-red-200">
+          {error}
+        </p>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12">
+        <p className="text-slate-300">Loading wallet dashboard…</p>
       </div>
     );
   }
 
   return (
-    <div className="container py-12 space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold">
-          Welcome back, {profile?.full_name || 'User'}!
-        </h1>
-        <p className="text-muted-foreground">
-          Here&apos;s what&apos;s happening with your LoFi account.
-        </p>
-      </div>
+    <main className="min-h-[calc(100vh-4rem)] px-4 py-8">
+      <div className="mx-auto max-w-6xl space-y-6">
+        <Card className="border-slate-800 bg-slate-900/80">
+          <CardHeader>
+            <CardTitle>Dashboard</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-slate-300">
+              Your wallet dashboard is the central place to review balances,
+              view withdrawal activity, and monitor transaction history.
+            </p>
+          </CardContent>
+        </Card>
 
-      {/* Quick Stats */}
-      <div className="grid md:grid-cols-4 gap-6">
-        <div className="bg-card rounded-xl p-6 border">
-          <p className="text-sm text-muted-foreground">Items Reported</p>
-          <p className="text-3xl font-bold">{profile?.items_reported || 0}</p>
-        </div>
-        <div className="bg-card rounded-xl p-6 border">
-          <p className="text-sm text-muted-foreground">Items Found</p>
-          <p className="text-3xl font-bold">{profile?.items_found || 0}</p>
-        </div>
-        <div className="bg-card rounded-xl p-6 border">
-          <p className="text-sm text-muted-foreground">Items Returned</p>
-          <p className="text-3xl font-bold">{profile?.items_returned || 0}</p>
-        </div>
-        <div className="bg-card rounded-xl p-6 border">
-          <p className="text-sm text-muted-foreground">Reputation</p>
-          <p className="text-3xl font-bold text-teal-600">{profile?.reputation_score || 0}</p>
-        </div>
-      </div>
+        <div className="grid gap-6 lg:grid-cols-[1.4fr_0.9fr]">
+          <Card className="border-slate-800 bg-slate-900/80">
+            <CardHeader>
+              <CardTitle>Wallet overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <WalletOverview wallet={data.wallet} />
+            </CardContent>
+          </Card>
 
-      {/* Recent Activity */}
-      <div className="bg-card rounded-xl border p-6">
-        <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
-        <div className="text-muted-foreground text-center py-8">
-          <p>No recent activity to display.</p>
-          <p className="text-sm mt-2">Report a lost item or search for found items to get started.</p>
+          <WithdrawalsPanel
+            withdrawals={data.withdrawals}
+            availableBalance={data.wallet.availableBalance}
+          />
         </div>
+
+        <TransactionsTable transactions={data.transactions} />
       </div>
-    </div>
+    </main>
   );
 }
